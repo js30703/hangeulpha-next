@@ -1,0 +1,103 @@
+var csv = require("csv-parser");
+var fs = require("fs");
+var sqlite3 = require("sqlite3");
+
+let rows = [];
+const object_to = (row) => {
+  return `(${Object.values(row).map((i) => {
+    return `"${i}"`;
+  })})`;
+};
+
+fs.createReadStream("data.csv")
+  .pipe(csv())
+  .on("data", (row) => {
+    rows.push(object_to(row));
+  })
+  .on("end", () => {
+    const q1 = `
+    insert into verbs (id,verb,type,regularType,level,outer_id,eng,examples)
+        values ${rows};
+    `;
+    let db = new sqlite3.Database("./verbs.db", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+      if (err && err?.code == "SQLITE_CANTOPEN") {
+        createDatabase();
+        return;
+      } else if (err) {
+        console.log("Getting error " + err);
+        process.exit(1);
+      }
+      db.exec(q1);
+      console.log(typeof q1, "hh");
+    });
+  });
+
+function createDatabase() {
+  var newdb = new sqlite3.Database("./verbs.db", (err) => {
+    if (err) {
+      console.log("Getting error " + err);
+      process.exit(1);
+    }
+    createVerbsTable(db);
+  });
+}
+
+function createTables(newdb) {
+  newdb.exec(
+    `
+    create table hero (
+        hero_id int primary key not null,
+        hero_name text not null,
+        is_xman text not null,
+        was_snapped text not null
+    );
+    insert into hero (hero_id, hero_name, is_xman, was_snapped)
+        values (1, 'Spiderman', 'N', 'Y'),
+                (2, 'Tony Stark', 'N', 'N'),
+                (3, 'Jean Grey', 'Y', 'N');
+
+    create table hero_power (
+        hero_id int not null,
+        hero_power text not null
+    );
+
+    insert into hero_power (hero_id, hero_power)
+        values (1, 'Web Slinging'),
+                (1, 'Super Strength'),
+                (1, 'Total Nerd'),
+                (2, 'Total Nerd'),
+                (3, 'Telepathic Manipulation'),
+                (3, 'Astral Projection');
+        `
+    // () => {
+    //   runQueries(newdb);
+    // }
+  );
+}
+
+function runQueries(db) {
+  db.all(
+    `select hero_name, is_xman, was_snapped from hero h
+    inner join hero_power hp on h.hero_id = hp.hero_id
+    where hero_power = ?`,
+    "Total Nerd",
+    (err, rows) => {
+      rows.forEach((row) => {
+        console.log(row.hero_name + "\t" + row.is_xman + "\t" + row.was_snapped);
+      });
+    }
+  );
+}
+
+function createVerbsTable(newdb) {
+  newdb.exec(`create table verbs (
+        id int primary key not null,
+        verb text not null,
+        type text not null,
+        regularType text not null,
+        level text not null,
+        outer_id text not null,
+        eng text not null,
+        examples text not null
+    );`);
+}
