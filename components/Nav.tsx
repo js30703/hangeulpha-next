@@ -28,6 +28,8 @@ import { Dispatch } from "react";
 import Image from "next/image";
 import logo from "public/hangeulpha.svg";
 import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md";
+import type { RootState } from "store";
+import { useSelector, useDispatch } from "react-redux";
 
 function Logo() {
   return (
@@ -44,21 +46,6 @@ export interface NavItem {
   link: string;
   isFocused?: boolean;
 }
-
-const nav_items = [
-  {
-    name: "Skills",
-    link: "/skills",
-  },
-  {
-    name: "Portfolios",
-    link: "/portfolios",
-  },
-  {
-    name: "Login",
-    link: "/login",
-  },
-];
 
 function NavItem({ name, link, isFocused }: NavItem) {
   return (
@@ -96,9 +83,37 @@ interface NavProps {
 }
 
 export default function Nav({ loading, setLoading }: NavProps) {
+  const nav_items = [
+    {
+      name: "Skills",
+      link: "/skills",
+    },
+    {
+      name: "Portfolios",
+      link: "/portfolios",
+    },
+    Login(),
+  ];
+  function Login() {
+    function isEmpty(obj: object) {
+      return Object.keys(obj).length === 0;
+    }
+    const auth = useSelector((state: RootState) => state.auth);
+    if (!isEmpty(auth)) {
+      return {
+        name: "Logout",
+        link: "/logout",
+      };
+    }
+    return {
+      name: "Login",
+      link: "/login",
+    };
+  }
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const [urlNow, setUrlNow] = useState("/");
+
   // 로딩 완료의 시점을 url 이 바뀌었을때로 잡음
   useEffect(() => {
     const handleStart = (url: string) => {
@@ -119,7 +134,7 @@ export default function Nav({ loading, setLoading }: NavProps) {
       router.events.off("routeChangeComplete", handleComplete);
       router.events.off("routeChangeError", handleComplete);
     };
-  }, [null]);
+  });
 
   return (
     <Center fontFamily="Poppins" bgColor="plain" fontWeight={[300, 400, 500]} fontSize={[14, 16, 18]} color="primary" px="4" boxShadow="md">
@@ -136,22 +151,24 @@ export default function Nav({ loading, setLoading }: NavProps) {
         </Show>
         {DarkModeToggle()}
       </HStack>
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen} preserveScrollBarGap>
-        <DrawerOverlay />
-        <DrawerContent bgColor="plain" fontFamily="Poppins" color="primary">
-          <DrawerHeader borderBottomWidth="1px" boxShadow="md">
-            <Logo />
-            <DrawerCloseButton _focus={{}} />
-          </DrawerHeader>
-          <DrawerBody>
-            <VStack py="4" spacing={6}>
-              {nav_items.map((item, idx) => {
-                return <NavItem key={idx} {...item} isFocused={urlNow == item.link} />;
-              })}
-            </VStack>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+      <Show below="sm">
+        <Drawer placement="left" onClose={onClose} isOpen={isOpen} preserveScrollBarGap>
+          <DrawerOverlay />
+          <DrawerContent bgColor="plain" fontFamily="Poppins" color="primary">
+            <DrawerHeader borderBottomWidth="1px" boxShadow="md">
+              <Logo />
+              <DrawerCloseButton _focus={{}} />
+            </DrawerHeader>
+            <DrawerBody>
+              <VStack py="4" spacing={6}>
+                {nav_items.map((item, idx) => {
+                  return <NavItem key={idx} {...item} isFocused={urlNow == item.link} />;
+                })}
+              </VStack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </Show>
     </Center>
   );
 }

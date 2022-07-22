@@ -1,8 +1,9 @@
 import { getFirestore, Timestamp, FieldValue } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
 
 const admin = require("firebase-admin");
-
-const serviceAccount = process.env.NEXT_FIREBASE_ADMIN_CONFIG || ''
+//_todo_: 이거 파일이어야함.
+const serviceAccount = require('./serviceAccountKey.json');
 
 !admin.apps.length ?
 admin.initializeApp({
@@ -16,3 +17,4 @@ export interface User {
   name:string,
   verbs?:string[],
 }
+export const auth = getAuth()

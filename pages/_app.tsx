@@ -4,14 +4,16 @@ import { theme } from "styles/theme";
 import { store } from "store";
 import { Provider } from "react-redux";
 import { ThemeProvider, useColorMode, useTheme } from "@chakra-ui/react";
+import Auth from "components/AuthControl";
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <Auth />
+      <ChakraProvider theme={theme}>
         <Component {...pageProps} />
-      </Provider>
-    </ChakraProvider>
+      </ChakraProvider>
+    </Provider>
   );
 }
 

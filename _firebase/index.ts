@@ -1,12 +1,16 @@
-import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+
+
 const firebaseConfig =  process.env.NEXT_PUBLIC_FIREBASE_CONFIG || ''
 // Initialize Firebase
-const app = initializeApp(JSON.parse(firebaseConfig));
+export const app = initializeApp(JSON.parse(firebaseConfig));;
+
 
 // Auth
-const auth = getAuth();
+export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export const google_login = () =>
@@ -16,9 +20,9 @@ signInWithPopup(auth, provider)
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const token = credential?.accessToken;
     // The signed-in user info.
-    const user = result.user;
+    const user:any = result.user;
     // save token data in localStorage
-    console.log(user)
+    return user
   })
   .catch((error) => {
     // Handle Errors here.
@@ -28,6 +32,8 @@ signInWithPopup(auth, provider)
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
   });
+
+  //storage 
+export const storage = getStorage(app);
 

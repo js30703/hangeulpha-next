@@ -15,12 +15,14 @@ export async function getServerSideProps(req: NextApiRequest, res: NextApiRespon
 
 export default function Index(props: any) {
   const [verbs, setVerbs] = useState({ ...props });
+
   async function refreshVerbs() {
     const _res = await getVerbs();
     if (_res.status == 200) {
       setVerbs({ ..._res?.data });
     }
   }
+
   return (
     <Layout title="Conjugations Practice">
       <Center w="100%" minH="calc(100vh - 100px);" overflow="hidden">

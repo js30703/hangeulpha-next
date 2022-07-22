@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Verbs {
+  id          Int            @id @default(autoincrement())
+  verb        String
+  type        String
+  level       String
+  regularType String
+  eng         String
+  exp         String
+  users       VerbsOnUsers[]
+}
+
+model Users {
+  uid   String         @id
+  email String         @unique
+  verbs VerbsOnUsers[]
+}
+
+model VerbsOnUsers {
+  verb       Verbs    @relation(fields: [verbId], references: [id])
+  verbId     Int
+  user       Users    @relation(fields: [userId], references: [uid])
+  userId     String
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([verbId, userId])
+}

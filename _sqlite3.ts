@@ -1,4 +1,6 @@
 import { Database, OPEN_READONLY } from "sqlite3"
+import {db as FireStore } from '_firebase/admin'
+
 
 export let dbReadOnly = new Database("./verbs.db", OPEN_READONLY, (err:any) => {
   if (err && err?.code == "SQLITE_CANTOPEN") {
@@ -18,5 +20,13 @@ export function getRandomVerbs(level:string|string[]){
       if (err) { reject(err) }
       resolve(rows)
     })
+  })
+}
+
+
+export function verbsToFirebase(){
+  dbReadOnly.all('select * from verbs;', function(err:any, rows:any[]) {
+    if (err) { console.log(err) }
+    console.log(rows.length)
   })
 }

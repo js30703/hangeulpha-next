@@ -1,36 +1,62 @@
 var csv = require("csv-parser");
 var fs = require("fs");
 var sqlite3 = require("sqlite3");
+const { PrismaClient } = require("@prisma/client");
 
-let rows = [];
+const prisma = new PrismaClient();
+
 const object_to = (row) => {
   return `(${Object.values(row).map((i) => {
     return `"${i}"`;
   })})`;
 };
 
-fs.createReadStream("data.csv")
-  .pipe(csv())
-  .on("data", (row) => {
-    rows.push(object_to(row));
-  })
-  .on("end", () => {
-    const q1 = `
+function createPrisma() {
+  let rows = [];
+  fs.createReadStream("data.csv")
+    .pipe(csv())
+    .on("data", (row) => {
+      row.id = Number(row.id);
+      delete row.outer_id;
+      rows.push(row);
+    })
+    .on("end", () => {
+      prisma.verbs
+        .createMany({
+          data: rows,
+          skipDuplicates: true, // Skip 'Bobo'
+        })
+        .then((obj) => {
+          console.log(obj);
+        });
+    });
+}
+
+function createSqlteDB() {
+  let rows = [];
+  fs.createReadStream("data.csv")
+    .pipe(csv())
+    .on("data", (row) => {
+      rows.push(object_to(row));
+    })
+    .on("end", () => {
+      const q1 = `
     insert into verbs (id,verb,type,regularType,level,outer_id,eng,examples)
         values ${rows};
     `;
-    let db = new sqlite3.Database("./verbs.db", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
-      if (err && err?.code == "SQLITE_CANTOPEN") {
-        createDatabase();
-        return;
-      } else if (err) {
-        console.log("Getting error " + err);
-        process.exit(1);
-      }
-      db.exec(q1);
-      console.log(typeof q1, "hh");
+      let db = new sqlite3.Database("./verbs.db", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+        if (err && err?.code == "SQLITE_CANTOPEN") {
+          createDatabase();
+          return;
+        } else if (err) {
+          console.log("Getting error " + err);
+          process.exit(1);
+        }
+        db.exec(q1);
+        console.log(typeof q1, "hh");
+      });
     });
-  });
+}
 
 function createDatabase() {
   var newdb = new sqlite3.Database("./verbs.db", (err) => {
@@ -101,3 +127,7 @@ function createVerbsTable(newdb) {
         examples text not null
     );`);
 }
+
+///run
+
+createPrisma();
