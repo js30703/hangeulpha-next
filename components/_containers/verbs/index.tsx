@@ -32,7 +32,7 @@ export default function Index(props: any) {
           p="40px 30px"
           shadow="lg"
           position="relative"
-          top={["0px", "-100px", "-140px"]}
+          top={["70px", "-50px", "-100px"]}
         >
           <Heading w="100%" p="5px 35px">
             Conjugations Practice
@@ -64,12 +64,12 @@ export default function Index(props: any) {
             </Menu>
           </Flex>
           {verbs.verbs.map((verb: Verbs) => {
-            return (
-              <Box key={verb.id} fontSize={50}>
-                {verb.verb} ➡️{conjuFuntion(conjuCur, verb.verb, verb.regularType)}
-              </Box>
-            );
-            //return <InputPractice key={verb.verb} conjuCur={conjuCur} verb={verb} />;
+            // return (
+            //   <Box key={verb.id} fontSize={50}>
+            //     {verb.verb} ➡️{conjuFuntion(conjuCur, verb.verb, verb.regularType)}
+            //   </Box>
+            // );
+            return <InputPractice key={verb.verb} conjuCur={conjuCur} verb={verb} />;
           })}
         </Center>
       </Center>

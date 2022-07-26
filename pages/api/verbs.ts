@@ -29,7 +29,7 @@ export default async function handler(
     if (req.method !== 'GET' ){sendResponse(res, 405, {error:'not allowed'})}
     let { level="1", } = req.query;
 
-    const result = await prisma.$queryRaw<Verbs[]>`SELECT * FROM "public"."Verbs" where level=${level} ORDER BY random() LIMIT 22;`
+    const result = await prisma.$queryRaw<Verbs[]>`SELECT * FROM "public"."Verbs" where level=${level} ORDER BY random() LIMIT 3;`
 
     sendResponse(res, 200, {level:level,verbs:result})
   })
