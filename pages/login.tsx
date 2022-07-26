@@ -12,7 +12,7 @@ export default function Login() {
   const dispatch = useDispatch();
   function _login() {
     google_login().then((user) => {
-      const { displayName, photoUrl } = user;
+      const { displayName, photoURL } = user;
       const { accessToken, refreshToken, expirationTime } = user?.stsTokenManager;
 
       dispatch(
@@ -21,7 +21,7 @@ export default function Login() {
           refreshToken: refreshToken,
           expirationTime: expirationTime,
           displayName: displayName,
-          photoUrl: photoUrl,
+          photoURL: photoURL,
         })
       );
       Router.push("/");

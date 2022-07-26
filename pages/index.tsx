@@ -56,7 +56,7 @@ const Home: NextPage = () => {
               BOOST YOUR SKILL
             </Heading>
             <Lorem my="3" px="2" />
-            <Button w="75%" leftIcon={<FiFilePlus />} borderRadius="16px" my="4" colorScheme="yellow" _focus={{}} variant="outline" color="primary">
+            <Button w="75%" leftIcon={<FiFilePlus />} borderRadius="16px" my="4" colorScheme="yellow" variant="outline" color="primary">
               Learn more
             </Button>
           </Center>

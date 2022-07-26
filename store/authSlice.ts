@@ -1,11 +1,12 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { removeToken, saveToken } from '_localStorage';
 
 export interface AuthState {
-  accessToken?: String;
-  refreshToken?: String;
-  displayName?:String;
-  photoUrl?:String;
+  accessToken?: string;
+  refreshToken?: string;
+  displayName?:string;
+  photoURL?:string;
   expirationTime?:number;
 }
 
@@ -17,11 +18,11 @@ export const AuthSlice = createSlice({
   initialState,
   reducers: {
     login: (state:AuthState, action:PayloadAction<AuthState>) => {
-      localStorage.setItem('@hangeulpha',String(action.payload.refreshToken))
+      saveToken(action.payload)
       return action.payload
     },
     logout: (state) => {
-      localStorage.removeItem("@hangeulpha");
+      removeToken()
       return initialState
     },
     refreshToken: (state) => {

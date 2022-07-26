@@ -56,54 +56,57 @@ function is_vow(char:string){
 }
 
 function verb_assembler(ending:string, verb1:string, slice?:[number,number], ) : string{
+    
     if (slice == null) return Hangul.assemble(get_stem(verb1).concat(Hangul.disassemble(ending)))
     return Hangul.assemble(get_stem(verb1).slice(...slice).concat(Hangul.disassemble(ending)))
 }
 
-function irregular_transform(verb1:string, type:string){
+function irregular_transform(verb1:string, type:string, ending:string[]){
     switch (type){
-        case "ㅂ불규칙": return verb_assembler('우다', verb1,[0,-1], )
-        case "ㅅ불규칙": return verb_assembler('으다', verb1,[0,-1], )
-        case "ㄷ불규칙": return verb_assembler('ㄹ다', verb1,[0,-1], )
-        case "르불규칙": return verb_assembler('ㄹ르다', verb1,[0,-2], )
-        case "우불규칙": return verb_assembler('ㅡ다', verb1,[0,-1], )
-        case "러불규칙": return verb_assembler('ㅡ르다', verb1,[0,-1], )
-        case "ㅎ불규칙": return verb_assembler( 'ㅐ다', verb1,[0,-2],)
+        case "ㅂ불규칙": return verb_assembler(ending[0], verb1,[0,-1], )
+        case "ㅅ불규칙": return verb_assembler(ending[1], verb1,[0,-1], )
+        case "ㄷ불규칙": return verb_assembler(ending[2], verb1,[0,-1], )
+        case "르불규칙": return verb_assembler(ending[3], verb1,[0,-2], )
+        case "우불규칙": return verb_assembler(ending[4], verb1,[0,-1], )
+        case "러불규칙": return verb_assembler(ending[5], verb1,[0,-1], )
+        case "ㅎ불규칙": return verb_assembler(ending[6], verb1,[0,-2],)
         default : return verb1
     }
 }
 
 export function A_EO(verb1:string, type:string) : string {
+    const irreg_endings = ['우다','으다','ㄹ다','ㄹ르다','ㅡ다','ㅡ르다','ㅐ다']
     let a:Array<string> = []
-    let verb:string = irregular_transform(verb1, type)
+    let verb:string = irregular_transform(verb1, type, irreg_endings)
     //이다,아니다 는 구별 불가
     //하다
-    if (String(get_stem(verb).slice(-2)) === "ㅎ,ㅏ"){ return verb_assembler('ㅐ', verb, [0,-1]) }
+    if (get_stem(verb).slice(-2).toString() === "ㅎ,ㅏ"){ return verb_assembler('ㅐ', verb, [0,-1]) }
     
     // 어간이 모음으로 끝나면?
-    if (is_vow(get_stem(verb).slice(-1)[0])){ 
-        if (String(get_stem(verb).slice(-1)) === "ㅏ"){ return verb_assembler('',verb) }
-        if (String(get_stem(verb).slice(-1)) === "ㅗ"){ return verb_assembler('ㅘ',verb,[0,-1]) }
-        if (String(get_stem(verb).slice(-1)) === "ㅚ"){ return verb_assembler('ㅙ', verb,[0,-1]) }
-        if (String(get_stem(verb).slice(-1)) === "ㅣ"){ return verb_assembler('ㅕ', verb, [0,-1]) }
-        if ("ㅟ,ㅢ".includes(String(get_stem(verb).slice(-1)))){ return verb_assembler('어', verb) }
+    if (is_vow(get_stem(verb).slice(-1).toString())){ 
+        if (get_stem(verb).slice(-1).toString() === "ㅏ"){ return verb_assembler('',verb) }
+        if (get_stem(verb).slice(-1).toString() === "ㅗ"){ return verb_assembler('ㅘ',verb,[0,-1]) }
+        if (get_stem(verb).slice(-1).toString() === "ㅚ"){ return verb_assembler('ㅙ', verb,[0,-1]) }
+        if (get_stem(verb).slice(-1).toString() === "ㅣ"){ return verb_assembler('ㅕ', verb, [0,-1]) }
+        if ("ㅟ,ㅢ".includes(get_stem(verb).slice(-1).toString())){ return verb_assembler('어', verb) }
         
-        if (String(get_stem(verb).slice(-1)) === "ㅜ"){
-            if (String(get_stem(verb).slice(-3,-2)) !== "ㅗ"){ return verb_assembler('ㅝ', verb,[0,-1]) }
-            if (String(get_stem(verb).slice(-4,-3)) === "ㄹ"){ return verb_assembler('ㅝ', verb,[0,-1]) }
+        if (get_stem(verb).slice(-1).toString() === "ㅜ"){
+            if (get_stem(verb).slice(-3,-2).toString() !== "ㅗ"){ return verb_assembler('ㅝ', verb,[0,-1]) }
+            if (get_stem(verb).slice(-4,-3).toString() === "ㄹ"){ return verb_assembler('ㅝ', verb,[0,-1]) }
             return verb_assembler('ㅘ', verb, [0,-1]) 
         }
         
-        if(String(get_stem(verb).slice(-1)) === "ㅡ"){
-            if("ㅏ,ㅗ".includes(String(get_stem(verb).slice(-3,-2))) 
-                || "ㅏ,ㅗ".includes(String(get_stem(verb).slice(-4,-3)))){ return verb_assembler('ㅏ', verb, [0,-1]) }   
-            return verb_assembler('ㅓ', verb, [0,-1] )
+        if(get_stem(verb).slice(-1).toString() === "ㅡ"){
+            for ( const c of get_stem(verb).slice(-4,-2) ){ 
+                if (c!==''&&"ㅏ,ㅗ".includes(c) ) return verb_assembler('ㅏ', verb, [0,-1])
+            }
+        return verb_assembler('ㅓ', verb, [0,-1] )
         }
         return verb_assembler('', verb)
     }
     // 어간이 자음으로 끝나면
-    if (!is_vow(get_stem(verb).slice(-1)[0])){
-        if ("ㅏ,ㅗ,ㅑ".includes(String(get_stem(verb).slice(-2,-1)))){ 
+    if (!is_vow(get_stem(verb).slice(-1).toString())){
+        if ("ㅏ,ㅗ,ㅑ".includes(get_stem(verb).slice(-2,-1).toString())){ 
             return verb_assembler('아', verb)} 
         return verb_assembler('어', verb)}
     return verb_assembler('', verb)
@@ -115,32 +118,34 @@ export function ATT_EOTT(verb1:string, type:string) : string {
 }
 
 export function L_LEUL(verb1:string, type:string){
-    let verb:string =irregular_transform(verb1, type)
+    const irreg_endings = ['우다','으다','ㄹ다','르다','ㅡ다','ㅡ르다','k다']
+    let verb:string =irregular_transform(verb1, type, irreg_endings)
     // 어간이 모음으로 끝나면?
     if ((is_vow(get_stem(verb).slice(-1)[0]))){return verb_assembler('ㄹ',verb)} 
     // 어간이 자음으로 끝나면   
-    if(String(get_stem(verb).slice(-1)) === "ㄹ"){ return verb_assembler('ㄹ',verb,[0,-1])}                  
+    if(get_stem(verb).slice(-1).toString() === "ㄹ"){ return verb_assembler('ㄹ',verb,[0,-1])}                  
     return verb_assembler('을',verb)
 }
 
 
 export function N_EUN(verb1:string, type:string){
-    let verb:string =irregular_transform(verb1, type)
+    const irreg_endings = ['우다','으다','ㄹ을다','르다','ㅜ다','ㅡ르다','다']
+    let verb:string =irregular_transform(verb1, type, irreg_endings)
     // 어간이 모음으로 끝나면?
-    if ((is_vow(get_stem(verb).slice(-1)[0]))){return verb_assembler('ㄴ',verb)} 
+    if ((is_vow(get_stem(verb).slice(-1).toString()))){return verb_assembler('ㄴ',verb)} 
     // 어간이 자음으로 끝나면   
-    if(String(get_stem(verb).slice(-1)) === "ㄹ"){ return verb_assembler('ㄴ',verb,[0,-1])}                  
+    if(get_stem(verb).slice(-1).toString() === "ㄹ"){ return verb_assembler('ㄴ',verb,[0,-1])}                  
     return verb_assembler('은',verb)
 }
 
 export function NEUN(verb:string, type:string) : string{
     // 어간이 모음으로 끝나면?
-    if (is_vow(get_stem(verb).slice(-1)[0])){
+    if (is_vow(get_stem(verb).slice(-1).toString())){
         if(type === 'AV'){return verb_assembler('는',verb)}
         return verb_assembler('X',verb)
     }  
     // 어간이 자음으로 끝나면   
-    if(String(get_stem(verb).slice(-1)) === "ㄹ"){
+    if(get_stem(verb).slice(-1).toString() === "ㄹ"){
         if(type === 'AV'){return verb_assembler('는',verb,[0,-1])}
         return verb_assembler('X',verb)
     }

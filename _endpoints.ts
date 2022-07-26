@@ -10,9 +10,12 @@ const Axios = axios.create({
     },
   });
 
-export async function getVerbs(){
-    return Axios({
+export async function getVerbs(level?:number){
+  return Axios({
       method:'get',
       url:"/api/verbs",
+      params:{
+        level:level
+      }
     })
 }

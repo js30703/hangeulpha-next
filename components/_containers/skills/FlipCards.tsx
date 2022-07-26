@@ -28,12 +28,13 @@ interface FlipCardProps extends ChakraProps {
 export default function FlipCard({ name, description, logo, color, onClick, isOpen = false, ...props }: FlipCardProps) {
   return (
     <WrapItem p="1px" position="relative" role="group" onClick={onClick}>
-      <FlipInner opacity={isOpen ? 0 : 1} transform={isOpen ? "rotateY(-180deg)" : "rotateY(0deg)"}>
+      <FlipInner opacity={isOpen ? 0 : 1} transform={isOpen ? "rotateY(-180deg)" : "rotateY(0deg)"} w="100%">
         <Box fontSize={80} color={color}>
           {logo}
         </Box>
       </FlipInner>
       <FlipInner
+        w="100%"
         position="absolute"
         top="0px"
         left="0px"

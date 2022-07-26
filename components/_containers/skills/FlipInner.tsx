@@ -16,7 +16,7 @@ export default function FlipInner({ children, ...props }: FlipInnerProps) {
       fontFamily="Poppins"
       fontWeight={500}
       p={3}
-      _groupHover={{ shadow: "lg", transform: "rotateY(-180deg)", opacity: 0 }}
+      _groupHover={{ shadow: "lg", transform: "rotateX(-180deg)", opacity: 0 }}
       transition="transform 0.7s, opacity 0.5s"
       fontSize={[16, 18, 20]}
       {...props}

@@ -16,7 +16,7 @@ import {
 import type { NextPage } from "next";
 import Layout from "components/Layout/DefaultLayout";
 //_todo: get ui from nike page
-import FlipCard from "components/_frags/skills/FlipCards";
+import FlipCard from "components/_containers/skills/FlipCards";
 import {
   SiChakraui,
   SiNextdotjs,
@@ -164,12 +164,10 @@ export default function Skills({}: NextPage) {
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>{current?.name?.toLocaleUpperCase()}</ModalHeader>
-            <ModalCloseButton _focus={{}} />
+            <ModalCloseButton />
             <ModalBody>{current?.description}</ModalBody>
             <ModalFooter>
-              <Button variant="ghost" _focus={{}}>
-                do some action
-              </Button>
+              <Button variant="ghost">do some action</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
