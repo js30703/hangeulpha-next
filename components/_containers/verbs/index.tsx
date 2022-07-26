@@ -22,7 +22,7 @@ export default function Index(props: any) {
 
   return (
     <Layout title="Conjugations Practice">
-      <Center w="100%" minH="calc(100vh - 100px);" overflow="hidden">
+      <Center w="100%" minH="calc(100vh - 100px);" overflow="hidden" h="100%">
         <Center
           w={["350px", "450px", "580px"]}
           bgColor="plain"
@@ -31,8 +31,7 @@ export default function Index(props: any) {
           justifyContent="flex-start"
           p="40px 30px"
           shadow="lg"
-          position="relative"
-          top={["70px", "-50px", "-100px"]}
+          m="20px 10px 100px"
         >
           <Heading w="100%" p="5px 35px">
             Conjugations Practice
