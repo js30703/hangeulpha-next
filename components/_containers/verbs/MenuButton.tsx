@@ -10,6 +10,7 @@ export default function _MenuButton({ children }: any) {
       transition="all 0.2s"
       borderRadius="md"
       borderWidth="1px"
+      boxShadow="md"
       _hover={{ bg: "primary" }}
       _expanded={{ bg: "primary", opacity: 0.3 }}
     >

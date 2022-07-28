@@ -4,28 +4,27 @@ import React from "react";
 import { BsGoogle } from "react-icons/bs";
 import type { RootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
-import { login } from "store/authSlice";
 import Layout from "components/Layout/DefaultLayout";
 import Router from "next/router";
+import { login } from "../store/authSlice";
 
 export default function Login() {
   const dispatch = useDispatch();
-  function _login() {
-    google_login().then((user) => {
-      const { displayName, photoURL } = user;
-      const { accessToken, refreshToken, expirationTime } = user?.stsTokenManager;
-
-      dispatch(
-        login({
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          expirationTime: expirationTime,
-          displayName: displayName,
-          photoURL: photoURL,
-        })
-      );
-      Router.push("/");
-    });
+  async function _login() {
+    const user = await google_login();
+    const { displayName, photoURL } = user;
+    const { accessToken, refreshToken, expirationTime } = user?.stsTokenManager;
+    console.log(new Date(expirationTime));
+    dispatch(
+      login({
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        expirationTime: expirationTime,
+        displayName: displayName,
+        photoURL: photoURL,
+      })
+    );
+    Router.push("/");
   }
   return (
     <Layout title="Login">

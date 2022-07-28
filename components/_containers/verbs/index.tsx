@@ -37,8 +37,19 @@ export default function Index(props: any) {
             Conjugations Practice
           </Heading>
           <Flex w="100%" fontSize={17} fontFamily="Poppins" p="30px 20px" flexDir={["column-reverse", "column-reverse", "row"]}>
-            <Button rightIcon={<FiRefreshCcw />} onClick={refreshVerbs} m="10px 5px" bgColor="secondary" color="white" _hover={{ opacity: 0.9 }}>
+            <Button
+              rightIcon={<FiRefreshCcw />}
+              onClick={refreshVerbs}
+              m="10px 5px"
+              px={6}
+              py={3}
+              bgColor="secondary"
+              color="white"
+              boxShadow="lg"
+              _hover={{ opacity: 0.9 }}
+            >
               Refresh
+              {/* #_todo : 3초에 한 번씩만 리프레시 가능 */}
             </Button>
             <Spacer />
             <Menu>

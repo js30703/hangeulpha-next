@@ -2,7 +2,7 @@ import { getFirestore, Timestamp, FieldValue } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 
 const admin = require("firebase-admin");
-//_todo_: 이거 파일이어야함.
+//_todo_: 이거 숨겨야함.
 const serviceAccount = require('./serviceAccountKey.json');
 
 !admin.apps.length ?
