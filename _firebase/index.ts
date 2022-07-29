@@ -34,6 +34,18 @@ signInWithPopup(auth, provider)
     const credential = GoogleAuthProvider.credentialFromError(error);
   });
 
+  //frontEnd token refresh
+    
   //storage 
 export const storage = getStorage(app);
 
+
+export async function getCurrentUser() {
+  const idToken = await auth?.currentUser?.getIdToken(true)
+  return auth?.currentUser
+};
+
+export async function refreshTokenFirebase() {
+  const idToken = await auth?.currentUser?.getIdToken(true)
+  return idToken
+};
