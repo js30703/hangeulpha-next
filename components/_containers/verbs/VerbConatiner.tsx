@@ -9,7 +9,7 @@ import _MenuButton from "./MenuButton";
 import { Verbs } from "@prisma/client";
 import type { RootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
-import { auth as AuthApp, refreshTokenFirebase } from "_firebase";
+import { auth as AuthApp, refreshTokenFirebase } from "_firebaseFront";
 import { motion } from "framer-motion";
 import { saveToken } from "store/authSlice";
 import solveUndefined from "hooks/solveUndefined";

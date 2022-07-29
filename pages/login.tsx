@@ -1,5 +1,5 @@
 import { Box, Button, Center, Heading, layout, Stack } from "@chakra-ui/react";
-import { google_login } from "_firebase";
+import { google_login } from "_firebaseFront";
 import React from "react";
 import { BsGoogle } from "react-icons/bs";
 import type { RootState } from "store";

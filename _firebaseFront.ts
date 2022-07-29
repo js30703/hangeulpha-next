@@ -1,13 +1,14 @@
+import solveUndefined from "hooks/solveUndefined";
 // import { getAnalytics } from "firebase/analytics";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
+
 
 
 const firebaseConfig =  process.env.NEXT_PUBLIC_FIREBASE_CONFIG || ''
 // Initialize Firebase
 export const app = initializeApp(JSON.parse(firebaseConfig));;
-
 
 // Auth
 export const auth = getAuth(app);
@@ -38,9 +39,11 @@ signInWithPopup(auth, provider)
     
   //storage 
 export const storage = getStorage(app);
-import solveUndefined from "hooks/solveUndefined";
 
 export async function refreshTokenFirebase() {
-  const idToken = await auth?.currentUser?.getIdToken(true)
-  return solveUndefined(auth?.currentUser)
+  const user = solveUndefined(auth?.currentUser)
+  if (user?.stsTokenManager?.isExpired){
+    const idToken = await user?.getIdToken(true)
+  }
+  return (user)
 };

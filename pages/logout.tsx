@@ -3,7 +3,7 @@ import Router from "next/router";
 import { removeToken } from "store/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { signOut } from "firebase/auth";
-import { auth } from "_firebase";
+import { auth } from "_firebaseFront";
 
 export default function Logout() {
   const dispatch = useDispatch();

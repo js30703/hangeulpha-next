@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {adminAuthCheck, auth}from "_firebase/admin"
+import {adminAuthCheck, auth}from "_firebaseBack"
 import { PrismaClient,Verbs } from '@prisma/client'
 import prisma from '_prisma'
 

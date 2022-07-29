@@ -1,4 +1,4 @@
-import * as jamo from "jamo";   // refactoring
+import * as jamo from "_jamo";   // refactoring
 // import * as jamo from "_jamo_re"; // legacy
 
 export function conjuDisplay(N: number) {

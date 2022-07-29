@@ -1,7 +1,7 @@
 import VerbContainer from "components/_containers/verbs/VerbConatiner";
 import { Verbs } from "@prisma/client";
 import prisma from "_prisma";
-import { adminAuthCheck } from "_firebase/admin";
+import { adminAuthCheck } from "_firebaseBack";
 
 export async function getServerSideProps(context: any) {
   const { req, res } = context;

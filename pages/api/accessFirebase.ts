@@ -1,6 +1,6 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {db} from '_firebase/admin'
+import {db} from '_firebaseBack'
 
 type Data = {
   name: string
