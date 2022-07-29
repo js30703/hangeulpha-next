@@ -1,7 +1,4 @@
-//_todo_: next api를 백엔드로 사용하기. 
-// 1. logger
-// 2. fetching
-// 
+
 
 import * as Hangul from 'hangul-js';
 

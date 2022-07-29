@@ -10,12 +10,15 @@ const Axios = axios.create({
     },
   });
 
-export async function getVerbs(level?:number){
+export async function getVerbs(level?:number, token?:string){
   return Axios({
       method:'get',
       url:"/api/verbs",
       params:{
         level:level
+      },
+      headers:{
+        'Authorization': `Bearer ${token}` 
       }
     })
 }

@@ -18,3 +18,16 @@ export interface User {
   verbs?:string[],
 }
 export const auth = getAuth()
+
+export async function adminAuthCheck(idToken?:string) {
+  try {
+    if (!idToken) {return false}
+    
+    const decoded = await auth.verifyIdToken(idToken);
+    if (decoded?.uid) { return true; }
+    
+    return false;
+  } catch (error) {
+    return false;
+  }
+}

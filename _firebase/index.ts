@@ -38,14 +38,9 @@ signInWithPopup(auth, provider)
     
   //storage 
 export const storage = getStorage(app);
-
-
-export async function getCurrentUser() {
-  const idToken = await auth?.currentUser?.getIdToken(true)
-  return auth?.currentUser
-};
+import solveUndefined from "hooks/solveUndefined";
 
 export async function refreshTokenFirebase() {
   const idToken = await auth?.currentUser?.getIdToken(true)
-  return idToken
+  return solveUndefined(auth?.currentUser)
 };

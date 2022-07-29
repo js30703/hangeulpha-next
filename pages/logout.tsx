@@ -1,6 +1,6 @@
 import React, { useEffect, useInsertionEffect } from "react";
 import Router from "next/router";
-import { logout } from "store/authSlice";
+import { removeToken } from "store/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { signOut } from "firebase/auth";
 import { auth } from "_firebase";
@@ -10,7 +10,7 @@ export default function Logout() {
   useEffect(() => {
     signOut(auth)
       .then(() => {
-        dispatch(logout());
+        dispatch(removeToken());
         Router.push("/");
       })
       .catch((error) => {

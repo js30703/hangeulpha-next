@@ -6,22 +6,19 @@ import type { RootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
 import Layout from "components/Layout/DefaultLayout";
 import Router from "next/router";
-import { login } from "../store/authSlice";
+import { saveToken } from "../store/authSlice";
 
 export default function Login() {
   const dispatch = useDispatch();
   async function _login() {
     const user = await google_login();
-    const { displayName, photoURL } = user;
-    const { accessToken, refreshToken, expirationTime } = user?.stsTokenManager;
-    console.log(new Date(expirationTime));
     dispatch(
-      login({
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        expirationTime: expirationTime,
-        displayName: displayName,
-        photoURL: photoURL,
+      saveToken({
+        accessToken: user?.stsTokenManager.accessToken,
+        refreshToken: user?.stsTokenManager.refreshToken,
+        expirationTime: user?.stsTokenManager.expirationTime,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
       })
     );
     Router.push("/");

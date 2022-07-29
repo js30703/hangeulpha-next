@@ -3,13 +3,12 @@ import { AppProps } from "next/app";
 import { theme } from "styles/theme";
 import { store } from "store";
 import { Provider } from "react-redux";
-import Auth from "components/AuthLoader";
-import { useEffect } from "react";
+import AuthInitLoader from "components/AuthInitLoader";
 
 function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <Auth />
+      <AuthInitLoader />
       <ChakraProvider theme={theme}>
         <Component {...pageProps} />
       </ChakraProvider>

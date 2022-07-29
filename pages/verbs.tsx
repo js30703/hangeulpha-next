@@ -1,28 +1,12 @@
-import Index from "components/_containers/verbs";
+import VerbContainer from "components/_containers/verbs/VerbConatiner";
 import { Verbs } from "@prisma/client";
 import prisma from "_prisma";
-import { auth } from "_firebase/admin";
-
-//_todo : permission check.
-export default Index;
-
-async function authCheck(req: any, res: any) {
-  try {
-    const idToken = req.cookies?.accessToken;
-    const _ = await auth.verifyIdToken(idToken);
-    if (_?.uid) {
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
+import { adminAuthCheck } from "_firebase/admin";
 
 export async function getServerSideProps(context: any) {
   const { req, res } = context;
-  const isAuthenticated = await authCheck(req, res);
+  const idToken = req.cookies?.accessToken;
+  const isAuthenticated = await adminAuthCheck(idToken);
   if (isAuthenticated) {
     const result = await prisma.$queryRaw<Verbs[]>`SELECT * FROM "public"."Verbs" where level='1' ORDER BY random() LIMIT 3;`;
     return {
@@ -37,3 +21,5 @@ export async function getServerSideProps(context: any) {
     props: {},
   };
 }
+
+export default VerbContainer;

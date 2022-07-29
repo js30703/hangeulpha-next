@@ -1,4 +1,4 @@
-import { Menu, MenuList, MenuItem, Spacer, Flex, Box, Button, Center, Heading } from "@chakra-ui/react";
+import { Menu, MenuList, MenuItem, Spacer, Flex, Box, Button, Center, Heading, keyframes } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FiRefreshCcw } from "react-icons/fi";
 import Layout from "components/Layout/DefaultLayout";
@@ -7,17 +7,52 @@ import { getVerbs } from "_endpoints";
 import { conjuDisplay } from "./conju";
 import _MenuButton from "./MenuButton";
 import { Verbs } from "@prisma/client";
-import { conjuFuntion } from "./conju";
-export default function Index(props: any) {
+import type { RootState } from "store";
+import { useSelector, useDispatch } from "react-redux";
+import { auth as AuthApp, refreshTokenFirebase } from "_firebase";
+import { motion } from "framer-motion";
+import { saveToken } from "store/authSlice";
+import solveUndefined from "hooks/solveUndefined";
+
+const animationKeyframes = keyframes`
+  0% { transform: scale(1) rotate(0); border-radius: 20%; }
+  100% { transform: scale(1) rotate(-360deg); border-radius: 20%; }
+`;
+const animation = `${animationKeyframes} 2s ease-in-out infinite`;
+
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+export default function VerbContainer(props: any) {
+  const authRedux = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
+  const oneHour = 60 * 60;
   const [level, setLevel] = useState(1);
   const [conjuCur, setConjuCur] = useState(0);
   const [verbs, setVerbs] = useState({ ...props });
+  const [canRefresh, setCanRefresh] = useState(true);
 
   async function refreshVerbs() {
-    const _res = await getVerbs(level);
+    setCanRefresh(false);
+
+    const user = await refreshTokenFirebase(); // firebase
+
+    dispatch(
+      saveToken({
+        accessToken: user?.stsTokenManager.accessToken,
+        refreshToken: user?.stsTokenManager.refreshToken,
+        expirationTime: user?.stsTokenManager.expirationTime,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      })
+    );
+
+    const _res = await getVerbs(level, user.accessToken);
+
+    await delay(1500);
     if (_res.status == 200) {
       setVerbs({ ..._res?.data });
     }
+    setCanRefresh(true);
   }
 
   return (
@@ -38,7 +73,11 @@ export default function Index(props: any) {
           </Heading>
           <Flex w="100%" fontSize={17} fontFamily="Poppins" p="30px 20px" flexDir={["column-reverse", "column-reverse", "row"]}>
             <Button
-              rightIcon={<FiRefreshCcw />}
+              rightIcon={
+                <Box as={motion.div} animation={!canRefresh ? animation : ""}>
+                  <FiRefreshCcw />
+                </Box>
+              }
               onClick={refreshVerbs}
               m="10px 5px"
               px={6}
@@ -46,10 +85,10 @@ export default function Index(props: any) {
               bgColor="secondary"
               color="white"
               boxShadow="lg"
-              _hover={{ opacity: 0.9 }}
+              _hover={{}}
+              disabled={!canRefresh}
             >
               Refresh
-              {/* #_todo : 3초에 한 번씩만 리프레시 가능 */}
             </Button>
             <Spacer />
             <Menu>

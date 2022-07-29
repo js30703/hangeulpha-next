@@ -1,37 +1,48 @@
 
+
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { removeToken, saveToken } from '_localStorage';
+import * as machine from '_localStorage';
+import { auth as AuthApp, refreshTokenFirebase } from "_firebase";
+import solveUndefined from 'hooks/solveUndefined';
 
 export interface AuthState {
   accessToken?: string;
   refreshToken?: string;
+  expirationTime?: string;
   displayName?:string;
   photoURL?:string;
-  expirationTime?:number;
 }
 
 const initialState:AuthState = {}
 
-
+const oneHour = 60 * 60;
 export const AuthSlice = createSlice({
   name: 'Auth',
   initialState,
   reducers: {
-    login: (state:AuthState, action:PayloadAction<AuthState>) => {
-      saveToken(action.payload)
+    initToken:()=>{
+      const authStorage = machine.getToken();
+      machine.saveToken(authStorage)
+      return authStorage
+    },
+    saveToken: (state:AuthState, action:PayloadAction<AuthState>) => {
+      machine.saveToken(action.payload)
       return action.payload
     },
-    logout: (state) => {
-      removeToken()
+    removeToken: (state) => {
+      machine.removeToken()
       return initialState
     },
     refreshToken: (state) => {
-      console.log(state?.expirationTime)
+      refreshTokenFirebase().then(user=>{
+        state.accessToken = user?.acceessToken
+      })
     },
-  },
+  }
 });
 
 // Action creators are generated for each case reducer function
-export const { login, logout, } = AuthSlice.actions;
+export const { initToken, saveToken, removeToken,} = AuthSlice.actions;
 
 export default AuthSlice.reducer;
