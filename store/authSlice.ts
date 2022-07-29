@@ -21,11 +21,6 @@ export const AuthSlice = createSlice({
   name: 'Auth',
   initialState,
   reducers: {
-    initToken:()=>{
-      const authStorage = machine.getToken();
-      machine.saveToken(authStorage)
-      return authStorage
-    },
     saveToken: (state:AuthState, action:PayloadAction<AuthState>) => {
       machine.saveToken(action.payload)
       return action.payload
@@ -43,6 +38,6 @@ export const AuthSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { initToken, saveToken, removeToken,} = AuthSlice.actions;
+export const { saveToken, removeToken,} = AuthSlice.actions;
 
 export default AuthSlice.reducer;
