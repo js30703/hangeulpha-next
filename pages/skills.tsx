@@ -16,7 +16,7 @@ import {
 import type { NextPage } from "next";
 import Layout from "components/Layout/DefaultLayout";
 //_todo: get ui from nike page
-import FlipCard from "components/_containers/skills/FlipCards";
+import FlipCard from "containers/skills/FlipCards";
 import {
   SiChakraui,
   SiNextdotjs,

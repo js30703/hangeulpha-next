@@ -4,9 +4,6 @@ import { PrismaClient,Verbs } from '@prisma/client'
 import prisma from '_prisma'
 
 
-// _todo = prisma connection management 
-const _prisma = process.env.NODE_ENV == 'development'? prisma :  new PrismaClient()
-
 type Success = {
   level:string | string[],
   verbs?: any[],
@@ -37,7 +34,7 @@ export default async function handler(
 
     let { level="1", } = req.query;
 
-    const result = await _prisma.$queryRaw<Verbs[]>`SELECT * FROM "public"."Verbs" where level=${level} ORDER BY random() LIMIT 3;`
+    const result = await prisma.$queryRaw<Verbs[]>`SELECT * FROM "public"."Verbs" where level=${level} ORDER BY random() LIMIT 3;`
 
     sendResponse(res, 200, {level:level,verbs:result})
   })

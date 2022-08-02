@@ -2,7 +2,7 @@
 
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import * as machine from '_localStorage';
+import * as machine from 'store/_localStorage';
 import { auth as AuthApp, refreshTokenFirebase } from "_firebaseFront";
 import solveUndefined from 'hooks/solveUndefined';
 

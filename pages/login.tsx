@@ -12,16 +12,18 @@ export default function Login() {
   const dispatch = useDispatch();
   async function _login() {
     const user = await google_login();
-    dispatch(
-      saveToken({
-        accessToken: user?.stsTokenManager.accessToken,
-        refreshToken: user?.stsTokenManager.refreshToken,
-        expirationTime: user?.stsTokenManager.expirationTime,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-      })
-    );
-    Router.push("/");
+    if (user?.accessToken) {
+      dispatch(
+        saveToken({
+          accessToken: user?.stsTokenManager.accessToken,
+          refreshToken: user?.stsTokenManager.refreshToken,
+          expirationTime: user?.stsTokenManager.expirationTime,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        })
+      );
+      Router.push("/");
+    }
   }
   return (
     <Layout title="Login">
