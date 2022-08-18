@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { conjuFuntion } from "./conju";
 import { FaThumbsUp } from "react-icons/fa";
-import { Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, Icon, Center, chakra } from "@chakra-ui/react";
+import {
+  Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  Icon,
+  Center,
+  chakra,
+  Box,
+  HStack,
+  VStack,
+  Flex,
+} from "@chakra-ui/react";
 import { Verbs } from "@prisma/client";
 import { motion, isValidMotionProp } from "framer-motion";
 import { AiOutlineClose } from "react-icons/ai";
@@ -23,9 +40,22 @@ interface InputModalProps {
 }
 
 export default function InputModal({ conjuCur, verb, isOpen, onClose, answer }: InputModalProps) {
+  const AnswerCalculated = conjuFuntion(conjuCur, verb.verb, verb.regularType).split("");
   const is_answer = answer == conjuFuntion(conjuCur, verb.verb, verb.regularType);
+  const AnswerUser = answer.split("");
+  const [ShowAnswer, setShowAnswer] = useState(false);
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} preserveScrollBarGap isCentered size={["xs", "sm"]}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        setShowAnswer(false);
+        onClose();
+      }}
+      preserveScrollBarGap
+      isCentered
+      size={["xs", "sm"]}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Check Answer</ModalHeader>
@@ -59,18 +89,34 @@ export default function InputModal({ conjuCur, verb, isOpen, onClose, answer }: 
             </ChakraBox>
           )}
         </ModalBody>
-        <ModalFooter>
-          {answer}
-          {conjuFuntion(conjuCur, verb.verb, verb.regularType)}
-          {answer !== "" && (
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Show Answer
+        {answer !== "" && (
+          <ModalFooter h="100px" w="100%">
+            <Flex flexDir="column" w="60%" display={ShowAnswer ? "flex" : "none"} fontSize={25}>
+              <Text>💁🏻‍♀️ {AnswerCalculated}</Text>
+              <Text>
+                👩‍🎓{" "}
+                {AnswerUser.map((_char, idx) => {
+                  return (
+                    <Text display="inline" key={`ANS-${idx}`} color={AnswerCalculated[idx] === _char ? "black" : "red"}>
+                      {_char}
+                    </Text>
+                  );
+                })}
+              </Text>
+            </Flex>
+
+            <Button
+              colorScheme="blue"
+              px="20px"
+              ml="auto"
+              onClick={() => {
+                setShowAnswer(!ShowAnswer);
+              }}
+            >
+              Answer
             </Button>
-          )}
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
-            Close
-          </Button>
-        </ModalFooter>
+          </ModalFooter>
+        )}
       </ModalContent>
     </Modal>
   );

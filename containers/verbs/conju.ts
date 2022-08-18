@@ -36,5 +36,7 @@ switch (N) {
     return jamo.N_EUN(verb, regularType) + " 것";
     case 6:
     return jamo.JI(verb) + " 않아요";
+    default:
+    return ''
 }
 }
