@@ -1,5 +1,5 @@
 import { Box, Button, Center, Heading, layout, Stack } from "@chakra-ui/react";
-import { google_login } from "_firebaseFront";
+import { extractTokenFormFirebaseUser, google_login } from "_firebaseFront";
 import React from "react";
 import { BsGoogle } from "react-icons/bs";
 import type { RootState } from "store";
@@ -13,15 +13,7 @@ export default function Login() {
   async function _login() {
     const user = await google_login();
     if (user?.accessToken) {
-      dispatch(
-        saveToken({
-          accessToken: user?.stsTokenManager.accessToken,
-          refreshToken: user?.stsTokenManager.refreshToken,
-          expirationTime: user?.stsTokenManager.expirationTime,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        })
-      );
+      dispatch(saveToken(extractTokenFormFirebaseUser(user)));
       Router.push("/");
     }
   }

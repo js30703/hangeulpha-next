@@ -14,6 +14,8 @@ export interface AuthState {
   photoURL?:string;
 }
 
+
+
 const initialState:AuthState = {}
 
 const oneHour = 60 * 60;
@@ -21,23 +23,38 @@ export const AuthSlice = createSlice({
   name: 'Auth',
   initialState,
   reducers: {
+    loadToken: (state:AuthState)=>{
+      const _token = machine.getToken()
+      if (solveUndefined(_token?.expirationTime) < Date.now()) {
+        refreshTokenFirebase().then(user=>{
+          state.accessToken = user?.accessToken
+          state.accessToken = user.stsTokenManager.accessToken;
+          state.expirationTime = user.stsTokenManager.expirationTime;
+        })
+      } 
+      return _token
+    },
     saveToken: (state:AuthState, action:PayloadAction<AuthState>) => {
       machine.saveToken(action.payload)
       return action.payload
     },
-    removeToken: (state) => {
+    removeToken: (state:AuthState) => {
       machine.removeToken()
       return initialState
     },
-    refreshToken: (state) => {
+    refreshToken: (state:AuthState) => {
+      if (solveUndefined(state?.expirationTime) < Date.now()) {
       refreshTokenFirebase().then(user=>{
-        state.accessToken = user?.acceessToken
+        state.accessToken = user?.accessToken
+        state.accessToken = user.stsTokenManager.accessToken;
+        state.expirationTime = user.stsTokenManager.expirationTime;
       })
+    }
     },
   }
 });
 
 // Action creators are generated for each case reducer function
-export const { saveToken, removeToken,} = AuthSlice.actions;
+export const { loadToken ,saveToken, removeToken, refreshToken} = AuthSlice.actions;
 
 export default AuthSlice.reducer;

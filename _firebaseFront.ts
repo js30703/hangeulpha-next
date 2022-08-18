@@ -42,11 +42,20 @@ export const storage = getStorage(app);
 
 export async function refreshTokenFirebase() {
   const user = solveUndefined(auth?.currentUser)
-  
   if (user?.stsTokenManager?.isExpired){
     const idToken = await user?.getIdToken(true)
     return (user)
   }
-  console.log('After__', user)
   return (user)
 };
+
+export function extractTokenFormFirebaseUser(user:any){
+  return {
+    accessToken: user?.stsTokenManager.accessToken,
+    refreshToken: user?.stsTokenManager.refreshToken,
+    expirationTime: user?.stsTokenManager.expirationTime,
+    displayName: user.displayName,
+    photoURL: user.photoURL,
+  }
+
+}

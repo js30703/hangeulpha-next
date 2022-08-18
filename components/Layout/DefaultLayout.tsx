@@ -12,7 +12,7 @@ interface LayoutProps {
 export default function Layout({ children, title }: LayoutProps) {
   const { loading, urlNow } = usePageLoading();
   return (
-    <Box w="100%" bgColor="plain" m="0px" pb="10px" minH="100vh" overflow="auto" h="100%">
+    <Box w="100%" bgColor="plain" m="0px" minH="100vh" overflow="auto" h="100%">
       <Nav urlNow={urlNow} />
       {loading && (
         <Center w="100%" pt="300px">

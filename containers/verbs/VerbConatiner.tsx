@@ -9,7 +9,7 @@ import _MenuButton from "./MenuButton";
 import { Verbs } from "@prisma/client";
 import type { RootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
-import { auth as AuthApp, refreshTokenFirebase } from "_firebaseFront";
+import { auth as AuthApp, extractTokenFormFirebaseUser, refreshTokenFirebase } from "_firebaseFront";
 import { motion } from "framer-motion";
 import { saveToken } from "store/authSlice";
 import solveUndefined from "hooks/solveUndefined";
@@ -35,16 +35,7 @@ export default function VerbContainer(props: any) {
     setCanRefresh(false);
 
     const user = await refreshTokenFirebase(); // firebase
-
-    dispatch(
-      saveToken({
-        accessToken: user?.stsTokenManager.accessToken,
-        refreshToken: user?.stsTokenManager.refreshToken,
-        expirationTime: user?.stsTokenManager.expirationTime,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-      })
-    );
+    dispatch(saveToken(extractTokenFormFirebaseUser(user)));
 
     const _res = await getVerbs(level, user.accessToken);
 

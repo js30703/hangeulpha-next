@@ -43,8 +43,6 @@ export default function HomeContainer() {
             </Center>
           </Box>
           <Box h={["1500px", "1500px", "700px"]} bgColor="primary" w="100%" />
-
-          <Center py="20px">hi</Center>
         </Stack>
       </VStack>
     </Layout>
