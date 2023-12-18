@@ -3,7 +3,9 @@ import { getAuth } from 'firebase-admin/auth';
 
 const admin = require("firebase-admin");
 //_todo_: 이거 숨겨야함.
-const serviceAccount = require('./serviceAccountKey.json');
+const firebaseConfig =  process.env.NEXT_FIREBASE_ADMIN_CONFIG || ''
+const serviceAccount = JSON.parse(firebaseConfig);
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n')
 
 !admin.apps.length ?
 admin.initializeApp({
